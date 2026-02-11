@@ -9,7 +9,7 @@ groq_client = Groq()
 langfuse = get_client()
 
 @observe()
-def exercise1_multi_step_agent(task: str) -> dict:
+def multi_step_agent(task: str) -> dict:
 
     with propagate_attributes(tags=["exercise1", "multi-step-agent"]):
         get_client().update_current_trace(
@@ -124,7 +124,7 @@ def _synthesize_answer(task: str, results: list) -> str:
 
 
 print("\n--- Exercise 1: Multi-step Agent ---")
-result = exercise1_multi_step_agent("Explain how to set up a Python virtual environment")
+result = multi_step_agent("Explain how to set up a Python virtual environment")
 print(result)
 if result['status'] == 'success':
     print(f"Plan: {result['plan']}")
