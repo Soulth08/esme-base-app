@@ -5,6 +5,7 @@ import time
 from dotenv import load_dotenv
 import litellm
 from smolagents import CodeAgent, LiteLLMModel, tool
+from langfuse import observe, get_client, propagate_attributes
 
 # 1. Chargement des variables d'environnement
 load_dotenv()
@@ -61,7 +62,8 @@ def check_dietary_info(ingredient: str):
 
 
 def run_manual_loop(user_query):
-    print(f"\n--- 🔧 DÉMARRAGE MODE MANUEL ({MODEL_ID}) ---")
+    with propagate_attributes(tags=["COLPIN / MORETTI", "Partie 4"]):
+        print(f"\nDÉMARRAGE MODE MANUEL ({MODEL_ID}) ---")
     
     # Définition du schéma pour le LLM
     tools_schema = [

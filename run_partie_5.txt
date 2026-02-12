@@ -1,0 +1,258 @@
+
+
+=== PARTIE 5.2 : AGENT PLANIFICATEUR ===
+╭───────────────────────────────────────────── New run ──────────────────────────────────────────────╮
+│                                                                                                    │
+│ On est 3 clients au restaurant.                                                                    │
+│     1. Un végétarien (pas de viande/poisson).                                                      │
+│     2. Un sans gluten (pas de gluten).                                                             │
+│     3. Moi je mange de tout.                                                                       │
+│                                                                                                    │
+│     Budget TOTAL max pour le groupe : 60 euros.                                                    │
+│                                                                                                    │
+│     Propose-nous un menu complet (1 plat par personne) qui respecte le budget et les régimes.      │
+│     Utilise l'outil de calcul pour vérifier le total.                                              │
+│                                                                                                    │
+╰─ LiteLLMModel - groq/llama-3.3-70b-versatile ──────────────────────────────────────────────────────╯
+──────────────────────────────────────────── Initial plan ────────────────────────────────────────────
+Here are the facts I know and the plan of action that I will follow to solve the task:
+```
+## 1. Facts survey
+### 1.1. Facts given in the task
+- Number of clients: 3
+- Client 1 is a vegetarian (no meat/fish)
+- Client 2 is gluten-free (no gluten)
+- Client 3 has no dietary restrictions
+- Total budget: 60 euros
+
+### 1.2. Facts to look up
+- Menu options for vegetarians
+- Gluten-free menu options
+- Prices of menu items
+  Where to find: Utilize the `menu_search` function to find menu options based on categories and 
+dietary restrictions.
+
+### 1.3. Facts to derive
+- Suitable menu options for each client based on their dietary restrictions
+- Total cost of the selected menu options
+  Derivation method: Use the `menu_search` function to find suitable menu options, then use the 
+`calculate_bill` function to calculate the total cost.
+
+## 2. Plan
+1. Search for vegetarian menu options using `menu_search` with 'végétarien' as the category.
+2. Search for gluten-free menu options using `menu_search` with 'sans gluten' as the allergen to 
+avoid.
+3. Select one menu option for each client based on their dietary restrictions.
+4. Calculate the total cost of the selected menu options using `calculate_bill`.
+5. Verify that the total cost is within the budget of 60 euros.
+6. If the total cost exceeds the budget, reconsider menu options and repeat steps 3-5 until a suitable
+combination is found.
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Step 1 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ ─ Executing parsed code: ─────────────────────────────────────────────────────────────────────────── 
+  vegetarian_options = menu_search(category="végétarien")                                             
+  gluten_free_options = menu_search(allergen_free="gluten")                                           
+  print("Vegetarian options:", vegetarian_options)                                                    
+  print("Gluten-free options:", gluten_free_options)                                                  
+ ──────────────────────────────────────────────────────────────────────────────────────────────────── 
+Execution logs:
+Vegetarian options: Aucun plat trouvé avec ces critères.
+Gluten-free options: [{"nom": "Soupe de Potiron", "prix": 8, "allergenes": [], "categorie": "Entrée"},
+{"nom": "Carpaccio de Bœuf", "prix": 14, "allergenes": [], "categorie": "Entrée"}, {"nom": "Risotto 
+aux Champignons", "prix": 18, "allergenes": ["lactose"], "categorie": "Plat"}, {"nom": "Steak Frites",
+"prix": 22, "allergenes": [], "categorie": "Plat"}, {"nom": "Curry de Légumes", "prix": 16, 
+"allergenes": [], "categorie": "Plat"}, {"nom": "Pavé de Saumon", "prix": 20, "allergenes": 
+["poisson"], "categorie": "Plat"}, {"nom": "Mousse au Chocolat", "prix": 7, "allergenes": ["lactose", 
+"oeuf"], "categorie": "Dessert"}, {"nom": "Salade de Fruits", "prix": 6, "allergenes": [], 
+"categorie": "Dessert"}]
+
+Out: None
+[Step 1: Duration 1.72 seconds| Input tokens: 2,711 | Output tokens: 445]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Step 2 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ ─ Executing parsed code: ─────────────────────────────────────────────────────────────────────────── 
+  # Select menu options for each client                                                               
+  vegetarian_option = {"nom": "Curry de Légumes", "prix": 16, "allergenes": [], "categorie": "Plat"}  
+  gluten_free_option = {"nom": "Soupe de Potiron", "prix": 8, "allergenes": [], "categorie":          
+  "Entrée"}                                                                                           
+  other_option = {"nom": "Carpaccio de Bœuf", "prix": 14, "allergenes": [], "categorie": "Entrée"}    
+                                                                                                      
+  # Calculate the total cost                                                                          
+  total_cost = calculate_bill([vegetarian_option["prix"], gluten_free_option["prix"],                 
+  other_option["prix"]])                                                                              
+  print("Total cost:", total_cost)                                                                    
+ ──────────────────────────────────────────────────────────────────────────────────────────────────── 
+Execution logs:
+Total cost: 38
+
+Out: None
+[Step 2: Duration 1.30 seconds| Input tokens: 5,899 | Output tokens: 733]
+──────────────────────────────────────────── Updated plan ────────────────────────────────────────────
+I still need to solve the task I was given:
+```
+
+    On est 3 clients au restaurant.
+    1. Un végétarien (pas de viande/poisson).
+    2. Un sans gluten (pas de gluten).
+    3. Moi je mange de tout.
+
+    Budget TOTAL max pour le groupe : 60 euros.
+
+    Propose-nous un menu complet (1 plat par personne) qui respecte le budget et les régimes.
+    Utilise l'outil de calcul pour vérifier le total.
+
+```
+
+Here are the facts I know and my new/updated plan of action to solve the task:
+```
+## 1. Updated facts survey
+### 1.1. Facts given in the task
+- There are 3 clients at the restaurant.
+- One client is a vegetarian (no meat/fish).
+- One client is gluten-free (no gluten).
+- The third client has no dietary restrictions.
+- The total budget for the group is 60 euros.
+
+### 1.2. Facts that we have learned
+- The vegetarian option chosen is "Curry de Légumes" for 16 euros.
+- The gluten-free option chosen is "Soupe de Potiron" for 8 euros.
+- The option for the client with no dietary restrictions is "Carpaccio de Bœuf" for 14 euros.
+- The total cost of these options is 38 euros.
+
+### 1.3. Facts still to look up
+- Additional menu options that could fit within the budget.
+- Confirmation that the chosen dishes are suitable for the clients' dietary needs.
+
+### 1.4. Facts still to derive
+- The best combination of dishes to stay within the budget of 60 euros while satisfying all dietary 
+requirements.
+
+## 2. Plan
+### 2.1. Determine if the current selection of dishes meets all dietary requirements and stays within 
+the budget.
+### 2.2. Explore additional menu options using the menu_search function to find potential alternatives
+or additions that fit within the remaining budget.
+### 2.3. Calculate the total cost of any new combinations of dishes to ensure they are within the 
+60-euro limit.
+### 2.4. Select the best combination of dishes that meets all dietary needs and stays within the 
+budget.
+### 2.5. Use the final_answer function to provide the selected menu options as the solution to the 
+problem.
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Step 3 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+ ─ Executing parsed code: ─────────────────────────────────────────────────────────────────────────── 
+  # Define the selected menu options                                                                  
+  vegetarian_option = {"nom": "Curry de Légumes", "prix": 16, "allergenes": [], "categorie": "Plat"}  
+  gluten_free_option = {"nom": "Soupe de Potiron", "prix": 8, "allergenes": [], "categorie":          
+  "Entrée"}                                                                                           
+  other_option = {"nom": "Carpaccio de Bœuf", "prix": 14, "allergenes": [], "categorie": "Entrée"}    
+                                                                                                      
+  # Provide the final answer                                                                          
+  final_answer(f"Menu proposé : {vegetarian_option['nom']} pour le végétarien,                        
+  {gluten_free_option['nom']} pour le sans gluten, et {other_option['nom']} pour le client sans       
+  restrictions. Coût total : 38 euros.")                                                              
+ ──────────────────────────────────────────────────────────────────────────────────────────────────── 
+Final answer: Menu proposé : Curry de Légumes pour le végétarien, Soupe de Potiron pour le sans 
+gluten, et Carpaccio de Bœuf pour le client sans restrictions. Coût total : 38 euros.
+[Step 3: Duration 229.80 seconds| Input tokens: 10,115 | Output tokens: 1,186]
+
+
+=== PARTIE 5.3 : AGENT CONVERSATIONNEL ===
+
+--- TOUR 1 ---
+Client: Bonjour, quelles sont vos entrées sans allergènes (sans rien) ?
+╭───────────────────────────────────────────── New run ──────────────────────────────────────────────╮
+│                                                                                                    │
+│ Bonjour, quelles sont vos entrées sans allergènes (sans rien) ?                                    │
+│                                                                                                    │
+╰─ LiteLLMModel - groq/llama-3.3-70b-versatile ──────────────────────────────────────────────────────╯
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Step 1 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ ─ Executing parsed code: ─────────────────────────────────────────────────────────────────────────── 
+  allergen_free_entries = menu_search(category="Entrée", allergen_free="none")                        
+  print(allergen_free_entries)                                                                        
+ ──────────────────────────────────────────────────────────────────────────────────────────────────── 
+Execution logs:
+[{"nom": "Salade César", "prix": 12, "allergenes": ["lactose", "gluten"], "categorie": "Entrée"}, 
+{"nom": "Soupe de Potiron", "prix": 8, "allergenes": [], "categorie": "Entrée"}, {"nom": "Carpaccio de
+Bœuf", "prix": 14, "allergenes": [], "categorie": "Entrée"}]
+
+Out: None
+[Step 1: Duration 0.51 seconds| Input tokens: 2,268 | Output tokens: 69]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Step 2 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ ─ Executing parsed code: ─────────────────────────────────────────────────────────────────────────── 
+  allergen_free_entries = [{"nom": "Salade César", "prix": 12, "allergenes": ["lactose", "gluten"],   
+  "categorie": "Entrée"}, {"nom": "Soupe de Potiron", "prix": 8, "allergenes": [], "categorie":       
+  "Entrée"}, {"nom": "Carpaccio de Bœuf", "prix": 14, "allergenes": [], "categorie": "Entrée"}]       
+  for entry in allergen_free_entries:                                                                 
+      if not entry["allergenes"]:                                                                     
+          print(entry["nom"])                                                                         
+ ──────────────────────────────────────────────────────────────────────────────────────────────────── 
+Execution logs:
+Soupe de Potiron
+Carpaccio de Bœuf
+
+Out: None
+[Step 2: Duration 0.69 seconds| Input tokens: 4,790 | Output tokens: 240]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Step 3 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+ ─ Executing parsed code: ─────────────────────────────────────────────────────────────────────────── 
+  final_answer("Soupe de Potiron, Carpaccio de Bœuf")                                                 
+ ──────────────────────────────────────────────────────────────────────────────────────────────────── 
+Final answer: Soupe de Potiron, Carpaccio de Bœuf
+[Step 3: Duration 239.86 seconds| Input tokens: 7,687 | Output tokens: 307]
+
+--- TOUR 2 ---
+Client: Je vais plutôt prendre un plat. Avez-vous quelque chose de végétarien ?
+╭───────────────────────────────────────────── New run ──────────────────────────────────────────────╮
+│                                                                                                    │
+│ Je vais plutôt prendre un plat. Avez-vous quelque chose de végétarien ?                            │
+│                                                                                                    │
+╰─ LiteLLMModel - groq/llama-3.3-70b-versatile ──────────────────────────────────────────────────────╯
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Step 1 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ ─ Executing parsed code: ─────────────────────────────────────────────────────────────────────────── 
+  vegetarian_plats = menu_search(category="Plat", allergen_free="viande")                             
+  print(vegetarian_plats)                                                                             
+ ──────────────────────────────────────────────────────────────────────────────────────────────────── 
+Execution logs:
+[{"nom": "Risotto aux Champignons", "prix": 18, "allergenes": ["lactose"], "categorie": "Plat"}, 
+{"nom": "Steak Frites", "prix": 22, "allergenes": [], "categorie": "Plat"}, {"nom": "Curry de 
+Légumes", "prix": 16, "allergenes": [], "categorie": "Plat"}, {"nom": "Pâtes Carbonara", "prix": 17, 
+"allergenes": ["lactose", "gluten", "oeuf"], "categorie": "Plat"}, {"nom": "Pavé de Saumon", "prix": 
+20, "allergenes": ["poisson"], "categorie": "Plat"}]
+
+Out: None
+[Step 4: Duration 0.99 seconds| Input tokens: 10,760 | Output tokens: 442]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Step 2 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ ─ Executing parsed code: ─────────────────────────────────────────────────────────────────────────── 
+  vegetarian_plats = [{"nom": "Risotto aux Champignons", "prix": 18, "allergenes": ["lactose"],       
+  "categorie": "Plat"}, {"nom": "Steak Frites", "prix": 22, "allergenes": [], "categorie": "Plat"},   
+  {"nom": "Curry de Légumes", "prix": 16, "allergenes": [], "categorie": "Plat"}, {"nom": "Pâtes      
+  Carbonara", "prix": 17, "allergenes": ["lactose", "gluten", "oeuf"], "categorie": "Plat"}, {"nom":  
+  "Pavé de Saumon", "prix": 20, "allergenes": ["poisson"], "categorie": "Plat"}]                      
+  for plat in vegetarian_plats:                                                                       
+      if "poisson" not in plat["allergenes"] and "viande" not in plat["allergenes"] and "oeuf" not    
+  in plat["allergenes"]:                                                                              
+          print(plat["nom"])                                                                          
+ ──────────────────────────────────────────────────────────────────────────────────────────────────── 
+Execution logs:
+Risotto aux Champignons
+Steak Frites
+Curry de Légumes
+
+Out: None
+[Step 5: Duration 1.41 seconds| Input tokens: 14,160 | Output tokens: 991]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Step 3 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
