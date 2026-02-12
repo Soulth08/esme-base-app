@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 from langfuse import observe, get_client, propagate_attributes
 from smolagents import CodeAgent, LiteLLMModel, tool
+import litellm
 
 load_dotenv()
 
@@ -58,12 +59,12 @@ def get_fridge_inventory() -> str:
 class ChefAgent:
     def __init__(self, model="groq/llama-3.3-70b-versatile"):
         self.langfuse = get_client()
-        self.model = LiteLLMModel(model_id=model, api_key=os.getenv("GROQ_API_KEY"), temperature=0.2)
+        self.model = LiteLLMModel(model_id=model, api_key=os.getenv("GROQ_API_KEY"))
         self.agent = CodeAgent(tools=[get_best_meals, get_fridge_inventory], model=self.model)
 
     @observe(name="ask_chef COLPIN / MORETTI")
     def ask_chef(self, user_query: str) -> str:
-        with propagate_attributes(tags=["COLPIN / MORETTI", "1.2"]):
+        with propagate_attributes(tags=["COLPIN / MORETTI", "1.3"]):
             enhanced_query = f"""{user_query}
 
     INSTRUCTIONS :
@@ -82,6 +83,7 @@ class ChefAgent:
 
 
 if __name__ == "__main__":
+    litellm._turn_on_debug()
     agent = ChefAgent()
     query = "Peux tu me donner une recette pour un plat français avec des ingrédients de saison ?"
     print(f"👤 User: {query}")
