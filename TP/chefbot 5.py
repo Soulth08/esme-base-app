@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 import litellm
 from smolagents import CodeAgent, LiteLLMModel, tool, Tool
 
-# --- CONFIGURATION ET UTILITAIRE DE TRACING ---
+
 
 load_dotenv()
 MODEL_ID = "groq/llama-3.3-70b-versatile"
@@ -53,7 +53,7 @@ DIETARY_DB = {
     "épinards": "Légume. Riche en fer."
 }
 
-# --- Outils Partie 4 (CORRIGÉS) ---
+# Outils Partie 4 
 
 @tool
 def check_fridge_tool() -> str:
@@ -220,7 +220,7 @@ def run_partie_5_conversation():
     ]
 
     for i, turn in enumerate(dialogue_turns):
-        print(f"\n--- TOUR {i+1} ---")
+        print(f"\n--- TOUR {i+1}")
         print(f"Client: {turn}")
         # reset=False est crucial ici pour garder la mémoire de la conversation
         agent.run(turn, reset=False)
@@ -238,4 +238,4 @@ if __name__ == "__main__":
     run_partie_5_planning()
     run_partie_5_conversation()
     
-    print(f"\n\n--- Fin du programme. Trace sauvegardée dans le fichier txt généré. ---")
+    print(f"\n\n--- Fin du programme. Trace sauvegardée dans le fichier txt généré.")
