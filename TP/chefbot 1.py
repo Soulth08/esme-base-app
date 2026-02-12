@@ -9,20 +9,17 @@ load_dotenv()
 
 @observe(name="ask_chef_call")
 def ask_chef(question: str, temperature: float = 0.7) -> str:
-    """
-    Appel LLM basique vers Groq avec un profil de Chef spécialisé.
-    """
+
+    # tags
     with propagate_attributes(tags=["COLPIN / MORETTI", "1.3"]):
 
-        # 2. Définition du System Prompt (Consigne 1.1)
         system_prompt = (
             "Tu es ChefBot, un chef cuisinier français renommé, "
             "spécialisé dans la cuisine de saison et les produits locaux."
         )
 
-        # 3. Appel au modèle via LiteLLM (interface pour Groq)
         response = litellm.completion(
-            model="groq/llama-3.1-8b-instant",
+            model="groq/llama-3.1-8b-instant", # on utilise ce modèle car il est plus petit, donc rate limit plus bas
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": question}
@@ -35,23 +32,25 @@ def ask_chef(question: str, temperature: float = 0.7) -> str:
 
 if __name__ == "__main__":
     
+    #langfuse client
     langfuse = get_client()
-    user_query = "Peux-tu me suggérer un plat français avec des légumes de saison ?"
+    user_query = "En tant que chef cuisinier français spécialisé en cuisine de saison, peux-tu me suggérer la recette d'un plat ?"
     
-    # 1.3 - Test avec 3 températures différentes
+    # 1.3 températures
     temperatures = [0.1, 0.7, 1.2, 2.0]
     
     print(f"👤 Question: {user_query}\n")
 
     for temp in temperatures:
-        print(f"--- Test avec Temperature = {temp} ---")
+        print(f"température = {temp}")
         res = ask_chef(user_query, temperature=temp)
-        print(f"🤖 ChefBot: {res}\n")
+        print(f"ChefBot: {res}\n")
 
     # Envoi final des traces à Langfuse
     langfuse.flush()
 
 # --- OBSERVATIONS SUR LA TEMPERATURE ---
-# Temperature 0.1 : Réponse très structurée, classique (souvent une soupe ou un pot-au-feu), peu de variations.
-# Temperature 0.7 : Bon équilibre. Le ton est plus chaleureux, les adjectifs sont plus variés.
-# Temperature 1.2 : Très créatif, parfois trop. Peut inventer des noms de plats ou devenir verbeux/désordonné.
+# Temperature 0.1 : La réponse est structurée et claire. par contre c'est très souvent la même recette !
+# Temperature 0.7 : Parfois n'est pas cohérent. On a par exemple eu des "fruits de saison" en hiver, ce qui n'ets pas logique.
+# Temperature 1.2 : Très créatif, parfois trop. Peut inventer des noms de plats (escargots en croûte de bacon XD) ou devenir verbeux/désordonné.
+# Temperature 2.0 : Nous avons essayé avec une température plus élevée juste par curiosité. les phrases sont totalement désordonnées avec des fautes de frappe partout (Dans les épis des deux poire des deux couteaux dans un bon rétrique à coute.).
