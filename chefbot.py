@@ -1,7 +1,7 @@
 import json
 import os
 from dotenv import load_dotenv
-from langfuse import observe, get_client
+from langfuse import observe, get_client, propagate_attributes
 from smolagents import CodeAgent, LiteLLMModel, tool
 
 load_dotenv()
@@ -61,23 +61,24 @@ class ChefAgent:
         self.model = LiteLLMModel(model_id=model, api_key=os.getenv("GROQ_API_KEY"), temperature=0.2)
         self.agent = CodeAgent(tools=[get_best_meals, get_fridge_inventory], model=self.model)
 
-    @observe(name="ask_chef COLPIN / MORETTI", as_type="generation")
+    @observe(name="ask_chef COLPIN / MORETTI")
     def ask_chef(self, user_query: str) -> str:
-        enhanced_query = f"""{user_query}
+        with propagate_attributes(tags=["COLPIN / MORETTI", "1.2"]):
+            enhanced_query = f"""{user_query}
 
-INSTRUCTIONS :
-1. Appelle get_best_meals() pour obtenir les repas classés par ordre de préférence avec leurs ingrédients
-2. Appelle get_fridge_inventory() pour voir ce qui est disponible
-3. Compare les ingrédients nécessaires de CHAQUE repas avec le contenu du frigo
-4. Propose le repas le MIEUX CLASSÉ qui peut être préparé avec TOUS les ingrédients disponibles
-5. Si aucun repas de la liste n'est faisable, propose une alternative simple avec les ingrédients du frigo
+    INSTRUCTIONS :
+    1. Appelle get_best_meals() pour obtenir les repas classés par ordre de préférence avec leurs ingrédients
+    2. Appelle get_fridge_inventory() pour voir ce qui est disponible
+    3. Compare les ingrédients nécessaires de CHAQUE repas avec le contenu du frigo
+    4. Propose le repas le MIEUX CLASSÉ qui peut être préparé avec TOUS les ingrédients disponibles
+    5. Si aucun repas de la liste n'est faisable, propose une alternative simple avec les ingrédients du frigo
 
-Ta réponse finale doit inclure :
-- Le nom du repas suggéré
-- Pourquoi ce choix (classement + disponibilité des ingrédients)
-- Les ingrédients du frigo que tu vas utiliser"""
-        
-        return self.agent.run(enhanced_query)
+    Ta réponse finale doit inclure :
+    - Le nom du repas suggéré
+    - Pourquoi ce choix (classement + disponibilité des ingrédients)
+    - Les ingrédients du frigo que tu vas utiliser"""
+            
+            return self.agent.run(enhanced_query)
 
 
 if __name__ == "__main__":
