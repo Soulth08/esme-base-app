@@ -58,11 +58,11 @@ def get_fridge_inventory() -> str:
 class ChefAgent:
     def __init__(self, model="groq/llama-3.3-70b-versatile"):
         self.langfuse = get_client()
-        self.model = LiteLLMModel(model_id=model, api_key=os.getenv("GROQ_API_KEY"))
+        self.model = LiteLLMModel(model_id=model, api_key=os.getenv("GROQ_API_KEY"), temperature=0.2)
         self.agent = CodeAgent(tools=[get_best_meals, get_fridge_inventory], model=self.model)
 
-    @observe(name="agent_run", as_type="generation")
-    def run(self, user_query: str) -> str:
+    @observe(name="ask_chef COLPIN / MORETTI", as_type="generation")
+    def ask_chef(self, user_query: str) -> str:
         enhanced_query = f"""{user_query}
 
 INSTRUCTIONS :
@@ -82,7 +82,7 @@ Ta réponse finale doit inclure :
 
 if __name__ == "__main__":
     agent = ChefAgent()
-    query = "Qu'est-ce qu'on mange de bon et facile ce soir ? Donne moi un repas avec ce que j'ai au frigo."
+    query = "Peux tu me donner une recette pour un plat français avec des ingrédients de saison ?"
     print(f"👤 User: {query}")
-    print(f"🤖 Agent: {agent.run(query)}")
+    print(f"🤖 Agent: {agent.ask_chef(query)}")
     agent.langfuse.flush()
